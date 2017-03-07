@@ -19,57 +19,22 @@
                 //var isDoc = link.match(/\/file\/(.*)\/download/);
 
                 if( isDoc ) {
-                    console.log("Download File" + ",Link:"+ link + ", path:" + document.location.pathname + document.location.search);
-                    /*ga( "send", "event", "Download File", link,
-                        document.location.pathname + document.location.search);*/
-                    window.dict.push({
-                      'link_category': "Download File",
-                      'link_action': link,
-                      'link_label': document.location.pathname + document.location.search,
-                      'event': 'outbound link'
-                    });              	
+                    _paq.push(['trackEvent', 'Download File', link, document.location.pathname + document.location.search]);               	
 
                 } else if( link.match(/^tel\:/i) ) {
-                    console.log("Called Phone" + ",Link:"+ link + ", path:" + document.location.pathname + document.location.search);
-                    /*ga( "send", "event", "Called Phone", link,
-                        document.location.pathname + document.location.search);*/
-                    window.dict.push({
-                      'link_category': "Called Phone",
-                      'link_action': link,
-                      'link_label': document.location.pathname + document.location.search,
-                      'event': 'outbound link'
-                    });  	
+                    _paq.push(['trackEvent', 'Called Phone', link, document.location.pathname + document.location.search]);     	
 
-                } else if( link.match(/mailto/i) ) {    
-                    console.log("Send Mail" + ",Link:"+ link + ", path:" + document.location.pathname + document.location.search);
-                    /*ga( "send", "event", "Send Mail", link,
-                        document.location.pathname + document.location.search);*/
-                    window.dict.push({
-                      'link_category': "Send Mail",
-                      'link_action': link,
-                      'link_label': document.location.pathname + document.location.search,
-                      'event': 'outbound link'
-                    });  
+                } else if( link.match(/mailto/i) ) {
+                    /*trackEvent(category, action, [name], [value])*/
+                    _paq.push(['trackEvent', 'Send Mail', link, document.location.pathname + document.location.search]);   
 
                 } else if(link.indexOf(location.host) == -1 && !link.match(/^javascript\:/i)){ /* external link */
-                    console.log("Outgoing Links" + ",Link:"+ link + ", path:" + document.location.pathname + document.location.search);
-                    /*ga(
-                        "send", "event", "Outgoing Links", link,
-                        document.location.pathname + document.location.search);*/
-                    window.dict.push({
-                      'link_category': "Outgoing Links",
-                      'link_action': link,
-                      'link_label': document.location.pathname + document.location.search,
-                      'event': 'outbound link'
-                    });
-
                     /*trackEvent(category, action, [name], [value])*/
                     _paq.push(['trackEvent', 'Outgoing Links', link, document.location.pathname + document.location.search]);  
 
                 } else {};
             }
         }
-
 
         var ele = document.body;
 
@@ -126,21 +91,9 @@
 	      
 	      var _curr = Math.min(100, Math.max(0, Math.round(window.pageYOffset / (Math.max(document.documentElement.offsetHeight, document.documentElement.scrollHeight, document.body.offsetHeight, document.body.scrollHeight) - window.innerHeight) * 100)))
 
-
 	      if(_curr > window.dict.maxDepth) {
-
-	          //config.maxDepth = _curr;
 	        	window.dict.maxDepth = _curr;
-	          fireAnalyticsEvent(window.dict.maxDepth);
-
 	       }
-
-	    }
-	      
-	    function fireAnalyticsEvent(distance) {
-			//dataLayer = window.dataLayer || [];
-	      	//dataLayer.push({'event': 'scroll', 'currentPosoition' : distance});
-
 	    }
 
 	      
@@ -199,9 +152,78 @@
 	      }
 
 	    }
-
 	    
 	  })();
+
+	var pushCustomDimensions = (function() {
+		//loginStatus
+		if (window.ENV.currentUser.loggedIn != null){
+			_paq.push(['setCustomDimension', 2, (window.ENV.currentUser.loggedIn == false ? 0 : 1) ]);
+		} 
+
+	    //registrationStatus
+	    if(window.ANALYTICS.registeredAt != null){
+	    	_paq.push(['setCustomDimension', 3, (window.ANALYTICS.registeredAt == false ? 0 : 1)]);	
+	    }
+	    
+	    //trialStatus 30 days
+	    if(window.ANALYTICS.registeredAt != null){
+	    	_paq.push(['setCustomDimension', 4, ((window.ANALYTICS.registeredAt != false) && ((_sf_startpt - (window.ANALYTICS.window.ANALYTICS.registeredAt != null *1000) <= 30 * 24 * 60 * 60 * 1000)) ? 1 : 0)]);
+	    	//_paq.push(['setCustomDimension', 4, ((window.ANALYTICS.registeredAt != false) && ((window.ANALYTICS.currentTimestamp - window.ANALYTICS.registeredAt <= 30 * 24 * 60 * 60)) ? 1 : 0)]);
+	    }
+	    
+	    //topics
+	    if(window.ANALYTICS.articleTopics != null){
+	    	_paq.push(['setCustomDimension', 5, (window.ANALYTICS.articleTopics.join(';').toLowerCase())]);
+	    }
+
+	    //articleHasPaywall
+	    if(window.ANALYTICS.articleHasPaywall != null){
+	    	_paq.push(['setCustomDimension', 6, (window.ANALYTICS.articleHasPaywall == false ? 0 : 1)]);
+	    }
+
+	    //articlePaywallVisible
+	    if(window.ANALYTICS.articlePaywallVisible != null){
+	    	_paq.push(['setCustomDimension', 7, (window.ANALYTICS.articlePaywallVisible == false ? 0 : 1)]);
+	    }
+
+	    //completeArticle
+	    if((window.ANALYTICS.articlePaywallVisible != null) && (window.ANALYTICS.articleHasPaywall != null)) {
+	    	if (window.ANALYTICS.articleHasPaywall != true){
+	    		_paq.push(['setCustomDimension', 8, 1]);
+	    	} else if (window.ANALYTICS.articleHasPaywall == true && window.ANALYTICS.articlePaywallVisible != true){
+	    		_paq.push(['setCustomDimension', 8, 1]);
+	    	} else if (window.ANALYTICS.articleHasPaywall == true && window.ANALYTICS.articlePaywallVisible == true){
+	    		_paq.push(['setCustomDimension', 8, 0]);
+	    	}	    	
+	    }
+
+	})();
+
+	var onBeforeUnloadEvent = (function() {
+
+
+	        var timeOnSite = timeOnSiteTracking();
+
+	        window.addEventListener('onbeforeunload', function(event) {
+		       	_paq.push(['trackEvent', 'TimeOnSiteTracking', timeOnSite]);
+		       	_paq.push(['trackEvent', 'ScrollTracking', window.dict.maxDepth])   
+		    });
+
+		    function timeOnSiteTracking() {
+		    	return (new Date()).getTime() - _sf_startpt;
+		    	//return window.ANALYTICS.currentTimestamp != null ? parseInt((new Date()).getTime()/1000 - window.ANALYTICS.currentTimestamp) : 0;
+		    }
+
+	})();
+
+	var siteSerachTracking = (function() {
+
+
+	        //to do
+
+	})();
+
 
 
 })();
