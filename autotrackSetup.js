@@ -1,6 +1,6 @@
 (function () {
 	var outboundLinkTracking = (function() {
-            //ga('create', '', 'auto');
+
             var _gaLt = function(event){
             var el = event.srcElement || event.target;
               
@@ -19,18 +19,18 @@
                 //var isDoc = link.match(/\/file\/(.*)\/download/);
 
                 if( isDoc ) {
-                    _paq.push(['trackEvent', 'Download File', link, document.location.pathname + document.location.search]);               	
+                    _paq.push(['trackEvent', 'Download File', link, document.location.pathname + '' + document.location.search]);               	
 
                 } else if( link.match(/^tel\:/i) ) {
-                    _paq.push(['trackEvent', 'Called Phone', link, document.location.pathname + document.location.search]);     	
+                    _paq.push(['trackEvent', 'Called Phone', link, document.location.pathname + '' +  document.location.search]);     	
 
                 } else if( link.match(/mailto/i) ) {
                     /*trackEvent(category, action, [name], [value])*/
-                    _paq.push(['trackEvent', 'Send Mail', link, document.location.pathname + document.location.search]);   
+                    _paq.push(['trackEvent', 'Send Mail', link, document.location.pathname + '' +  document.location.search]);   
 
                 } else if(link.indexOf(location.host) == -1 && !link.match(/^javascript\:/i)){ /* external link */
                     /*trackEvent(category, action, [name], [value])*/
-                    _paq.push(['trackEvent', 'Outgoing Links', link, document.location.pathname + document.location.search]);  
+                    _paq.push(['trackEvent', 'Outgoing Links', link, document.location.pathname + '' +  document.location.search]);  
 
                 } else {};
             }
@@ -40,8 +40,6 @@
 
         if(ele.addEventListener){
             ele.addEventListener("click", _gaLt, false);
-        }else if(ele.attachEvent){
-            ele.attachEvent('onclick', _gaLt);
         }
     })();
 
@@ -78,9 +76,6 @@
 
 	      }
 
-	      // Set our dataLayer name for later
-	      //config.dataLayerName = config.dataLayerName || 'dataLayer';
-
 	      checkDepth();
 	      addEvent(window, 'scroll', throttle(checkDepth, 500));
 
@@ -90,6 +85,7 @@
 	    function checkDepth() {
 	      
 	      var _curr = Math.min(100, Math.max(0, Math.round(window.pageYOffset / (Math.max(document.documentElement.offsetHeight, document.documentElement.scrollHeight, document.body.offsetHeight, document.body.scrollHeight) - window.innerHeight) * 100)))
+
 
 	      if(_curr > window.dict.maxDepth) {
 	        	window.dict.maxDepth = _curr;
@@ -158,43 +154,43 @@
 	var pushCustomDimensions = (function() {
 		//loginStatus
 		if (window.ENV.currentUser.loggedIn != null){
-			_paq.push(['setCustomDimension', 2, (window.ENV.currentUser.loggedIn == false ? 0 : 1) ]);
+			_paq.push(['setCustomDimension', 1, (window.ENV.currentUser.loggedIn == false ? 'notLoggedIn' : 'loggedIn') ]);
 		} 
 
 	    //registrationStatus
 	    if(window.ANALYTICS.registeredAt != null){
-	    	_paq.push(['setCustomDimension', 3, (window.ANALYTICS.registeredAt == false ? 0 : 1)]);	
+	    	_paq.push(['setCustomDimension', 2, (window.ANALYTICS.registeredAt == false ? 'notRegistered' : 'registered')]);	
 	    }
 	    
 	    //trialStatus 30 days
 	    if(window.ANALYTICS.registeredAt != null){
-	    	_paq.push(['setCustomDimension', 4, ((window.ANALYTICS.registeredAt != false) && ((_sf_startpt - (window.ANALYTICS.window.ANALYTICS.registeredAt != null *1000) <= 30 * 24 * 60 * 60 * 1000)) ? 1 : 0)]);
-	    	//_paq.push(['setCustomDimension', 4, ((window.ANALYTICS.registeredAt != false) && ((window.ANALYTICS.currentTimestamp - window.ANALYTICS.registeredAt <= 30 * 24 * 60 * 60)) ? 1 : 0)]);
+	    	//_paq.push(['setCustomDimension', 11, ((window.ANALYTICS.registeredAt != false) && ((_sf_startpt - (window.ANALYTICS.registeredAt != null *1000) <= 30 * 24 * 60 * 60 * 1000)) ? 'trial' : 'noTrial')]);
+	    	_paq.push(['setCustomDimension', 3, ((window.ANALYTICS.registeredAt != false) && ((window.ANALYTICS.currentTimestamp - window.ANALYTICS.registeredAt <= 30 * 24 * 60 * 60)) ? 'trial' : 'noTrial')]);
 	    }
 	    
 	    //topics
 	    if(window.ANALYTICS.articleTopics != null){
-	    	_paq.push(['setCustomDimension', 5, (window.ANALYTICS.articleTopics.join(';').toLowerCase())]);
+	    	_paq.push(['setCustomDimension', 4, (window.ANALYTICS.articleTopics.join(';').toLowerCase() + '')]);
 	    }
 
 	    //articleHasPaywall
-	    if(window.ANALYTICS.articleHasPaywall != null){
-	    	_paq.push(['setCustomDimension', 6, (window.ANALYTICS.articleHasPaywall == false ? 0 : 1)]);
-	    }
+	    /*if(window.ANALYTICS.articleHasPaywall != null){
+	    	_paq.push(['setCustomDimension', 15, (window.ANALYTICS.articleHasPaywall == false ? 'noPaywall' : 'hasPaywall')]);
+	    }*/
 
 	    //articlePaywallVisible
-	    if(window.ANALYTICS.articlePaywallVisible != null){
-	    	_paq.push(['setCustomDimension', 7, (window.ANALYTICS.articlePaywallVisible == false ? 0 : 1)]);
-	    }
+	    /*if(window.ANALYTICS.articlePaywallVisible != null){
+	    	_paq.push(['setCustomDimension', 14, (window.ANALYTICS.articlePaywallVisible == false ? 'invisiblePaywall' : 'visiblePaywall')]);
+	    }*/
 
 	    //completeArticle
 	    if((window.ANALYTICS.articlePaywallVisible != null) && (window.ANALYTICS.articleHasPaywall != null)) {
 	    	if (window.ANALYTICS.articleHasPaywall != true){
-	    		_paq.push(['setCustomDimension', 8, 1]);
+	    		_paq.push(['setCustomDimension', 5, 'completeArticle']);
 	    	} else if (window.ANALYTICS.articleHasPaywall == true && window.ANALYTICS.articlePaywallVisible != true){
-	    		_paq.push(['setCustomDimension', 8, 1]);
+	    		_paq.push(['setCustomDimension', 5, 'completeArticle']);
 	    	} else if (window.ANALYTICS.articleHasPaywall == true && window.ANALYTICS.articlePaywallVisible == true){
-	    		_paq.push(['setCustomDimension', 8, 0]);
+	    		_paq.push(['setCustomDimension', 5, 'incompleteArticle']);
 	    	}	    	
 	    }
 
@@ -202,28 +198,33 @@
 
 	var onBeforeUnloadEvent = (function() {
 
-
-	        var timeOnSite = timeOnSiteTracking();
-
-	        window.addEventListener('onbeforeunload', function(event) {
+	        window.onbeforeunload = function(event) {
+	        	var timeOnSite = timeOnSiteTracking();
 		       	_paq.push(['trackEvent', 'TimeOnSiteTracking', timeOnSite]);
 		       	_paq.push(['trackEvent', 'ScrollTracking', window.dict.maxDepth])   
-		    });
+		    };
 
 		    function timeOnSiteTracking() {
-		    	return (new Date()).getTime() - _sf_startpt;
-		    	//return window.ANALYTICS.currentTimestamp != null ? parseInt((new Date()).getTime()/1000 - window.ANALYTICS.currentTimestamp) : 0;
+		    	//return (new Date()).getTime() - _sf_startpt;
+		    	return window.ANALYTICS.currentTimestamp != null ? parseInt((new Date()).getTime()/1000 - window.ANALYTICS.currentTimestamp) : 0;
 		    }
 
 	})();
 
-	var siteSerachTracking = (function() {
+	var siteSearchTracking = (function() {
+		var searchItem;
 
+		var input = document.getElementsByClassName('searchbox__input')[0]; 
 
-	        //to do
+	 	setInterval(function(){
+	 		if ((document.location.search != "") && (document.location.search.length > 4) && (searchItem != document.location.search)){
+	 			searchItem = document.location.search;
+	 			_paq.push(['trackEvent', 'SearchTracking', window.location.search.substring(3) + '']);
+	 		}
+
+	 	}, 1000);
 
 	})();
-
 
 
 })();
