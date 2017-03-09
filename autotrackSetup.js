@@ -205,8 +205,8 @@
 		    };
 
 		    function timeOnSiteTracking() {
-		    	//return (new Date()).getTime() - _sf_startpt;
-		    	return window.ANALYTICS.currentTimestamp != null ? parseInt((new Date()).getTime()/1000 - window.ANALYTICS.currentTimestamp) : 0;
+		    	return (new Date()).getTime() - _sf_startpt;
+		    	//return window.ANALYTICS.currentTimestamp != null ? parseInt((new Date()).getTime()/1000 - window.ANALYTICS.currentTimestamp) : 0;
 		    }
 
 	})();
