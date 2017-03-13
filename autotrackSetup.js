@@ -153,38 +153,38 @@
 
 	var pushCustomDimensions = (function() {
 		//loginStatus
-		if (window.ENV.currentUser.loggedIn != null){
+		if ((window.ENV != null) && (window.ENV.currentUser != null) && (window.ENV.currentUser.loggedIn != null)){
 			_paq.push(['setCustomDimension', 1, (window.ENV.currentUser.loggedIn == false ? 'notLoggedIn' : 'loggedIn') ]);
 		} 
 
 	    //registrationStatus
-	    if(window.ANALYTICS.registeredAt != null){
+	    if((window.ANALYTICS != null) && (window.ANALYTICS.registeredAt != null)){
 	    	_paq.push(['setCustomDimension', 2, (window.ANALYTICS.registeredAt == false ? 'notRegistered' : 'registered')]);	
 	    }
 	    
 	    //trialStatus 30 days
-	    if(window.ANALYTICS.registeredAt != null){
+	    if((window.ANALYTICS != null) && (window.ANALYTICS.registeredAt != null)){
 	    	//_paq.push(['setCustomDimension', 11, ((window.ANALYTICS.registeredAt != false) && ((_sf_startpt - (window.ANALYTICS.registeredAt != null *1000) <= 30 * 24 * 60 * 60 * 1000)) ? 'trial' : 'noTrial')]);
 	    	_paq.push(['setCustomDimension', 3, ((window.ANALYTICS.registeredAt != false) && ((window.ANALYTICS.currentTimestamp - window.ANALYTICS.registeredAt <= 30 * 24 * 60 * 60)) ? 'trial' : 'noTrial')]);
 	    }
 	    
 	    //topics
-	    if(window.ANALYTICS.articleTopics != null){
+	    if((window.ANALYTICS != null) && (window.ANALYTICS.articleTopics != null)){
 	    	_paq.push(['setCustomDimension', 4, (window.ANALYTICS.articleTopics.join(';').toLowerCase() + '')]);
 	    }
 
 	    //articleHasPaywall
-	    /*if(window.ANALYTICS.articleHasPaywall != null){
+	    /*if((window.ANALYTICS != null) && (window.ANALYTICS.articleHasPaywall != null)){
 	    	_paq.push(['setCustomDimension', 15, (window.ANALYTICS.articleHasPaywall == false ? 'noPaywall' : 'hasPaywall')]);
 	    }*/
 
 	    //articlePaywallVisible
-	    /*if(window.ANALYTICS.articlePaywallVisible != null){
+	    /*if((window.ANALYTICS != null) && (window.ANALYTICS.articlePaywallVisible != null)){
 	    	_paq.push(['setCustomDimension', 14, (window.ANALYTICS.articlePaywallVisible == false ? 'invisiblePaywall' : 'visiblePaywall')]);
 	    }*/
 
 	    //completeArticle
-	    if((window.ANALYTICS.articlePaywallVisible != null) && (window.ANALYTICS.articleHasPaywall != null)) {
+	    if((window.ANALYTICS != null) && (window.ANALYTICS.articlePaywallVisible != null) && (window.ANALYTICS.articleHasPaywall != null)) {
 	    	if (window.ANALYTICS.articleHasPaywall != true){
 	    		_paq.push(['setCustomDimension', 5, 'completeArticle']);
 	    	} else if (window.ANALYTICS.articleHasPaywall == true && window.ANALYTICS.articlePaywallVisible != true){
