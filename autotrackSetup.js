@@ -153,8 +153,8 @@
 
 	var pushCustomDimensions = (function() {
 		//loginStatus
-		if ((window.ENV != null) && (window.ENV.currentUser != null) && (window.ENV.currentUser.loggedIn != null)){
-			_paq.push(['setCustomDimension', 1, (window.ENV.currentUser.loggedIn == false ? 'notLoggedIn' : 'loggedIn') ]);
+		if ((window.ANALYTICS != null) && (window.ANALYTICS.loggedIn != null)){
+			_paq.push(['setCustomDimension', 1, (window.ANALYTICS.loggedIn == false ? 'notLoggedIn' : 'loggedIn') ]);
 		} 
 
 	    //registrationStatus
@@ -174,14 +174,14 @@
 	    }
 
 	    //articleHasPaywall
-	    /*if((window.ANALYTICS != null) && (window.ANALYTICS.articleHasPaywall != null)){
-	    	_paq.push(['setCustomDimension', 15, (window.ANALYTICS.articleHasPaywall == false ? 'noPaywall' : 'hasPaywall')]);
-	    }*/
+	    if((window.ANALYTICS != null) && (window.ANALYTICS.articleHasPaywall != null)){
+	    	_paq.push(['setCustomDimension', 6, (window.ANALYTICS.articleHasPaywall == false ? 'noPaywall' : 'hasPaywall')]);
+	    }
 
 	    //articlePaywallVisible
-	    /*if((window.ANALYTICS != null) && (window.ANALYTICS.articlePaywallVisible != null)){
-	    	_paq.push(['setCustomDimension', 14, (window.ANALYTICS.articlePaywallVisible == false ? 'invisiblePaywall' : 'visiblePaywall')]);
-	    }*/
+	    if((window.ANALYTICS != null) && (window.ANALYTICS.articlePaywallVisible != null)){
+	    	_paq.push(['setCustomDimension', 7, (window.ANALYTICS.articlePaywallVisible == false ? 'invisiblePaywall' : 'visiblePaywall')]);
+	    }
 
 	    //completeArticle
 	    if((window.ANALYTICS != null) && (window.ANALYTICS.articlePaywallVisible != null) && (window.ANALYTICS.articleHasPaywall != null)) {
