@@ -1,6 +1,7 @@
 (function () {
-	var outboundLinkTracking = (function() {
 
+	var outboundLinkTracking = (function() {
+			var _paq = _paq || [];
             var _gaLt = function(event){
             var el = event.srcElement || event.target;
               
@@ -152,6 +153,7 @@
 	  })();
 
 	var pushCustomDimensions = (function() {
+		var _paq = _paq || [];
 		//loginStatus
 		if ((window.ANALYTICS != null) && (window.ANALYTICS.loggedIn != null)){
 			_paq.push(['setCustomDimension', 1, (window.ANALYTICS.loggedIn == false ? 'notLoggedIn' : 'loggedIn') ]);
@@ -197,7 +199,7 @@
 	})();
 
 	var onBeforeUnloadEvent = (function() {
-
+			var _paq = _paq || [];
 	        window.onbeforeunload = function(event) {
 	        	var timeOnSite = timeOnSiteTracking();
 		       	_paq.push(['trackEvent', 'TimeOnSiteTracking', timeOnSite]);
@@ -212,6 +214,7 @@
 	})();
 
 	var siteSearchTracking = (function() {
+		var _paq = _paq || [];
 		var searchItem;
 
 		var input = document.getElementsByClassName('searchbox__input')[0]; 
