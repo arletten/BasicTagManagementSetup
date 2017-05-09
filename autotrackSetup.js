@@ -1,5 +1,6 @@
-	var outboundLinkTracking = function() {
-			var _paq = _paq || [];
+(function (_paq) {
+	var outboundLinkTracking = (function() {
+			
             var _gaLt = function(event){
             var el = event.srcElement || event.target;
               
@@ -40,9 +41,9 @@
         if(ele.addEventListener){
             ele.addEventListener("click", _gaLt, false);
         }
-    };
+    })();
 
-  	var scrolltarcking = function() {
+  	var scrolltarcking = (function() {
 
 	    'use strict';
 
@@ -148,10 +149,10 @@
 
 	    }
 	    
-	  };
+	  })();
 
-	var pushCustomDimensions = function() {
-		var _paq = _paq || [];
+	var pushCustomDimensions = (function() {
+
 		//loginStatus
 		if ((window.ANALYTICS != null) && (window.ANALYTICS.loggedIn != null)){
 			_paq.push(['setCustomDimension', 1, (window.ANALYTICS.loggedIn == false ? 'notLoggedIn' : 'loggedIn') ]);
@@ -194,10 +195,10 @@
 	    	}	    	
 	    }
 
-	};
+	})();
 
-	var onBeforeUnloadEvent = function() {
-			var _paq = _paq || [];
+	var onBeforeUnloadEvent = (function() {
+
 	        window.onbeforeunload = function(event) {
 	        	var timeOnSite = timeOnSiteTracking();
 		       	_paq.push(['trackEvent', 'TimeOnSiteTracking', timeOnSite]);
@@ -209,10 +210,10 @@
 		    	//return window.ANALYTICS.currentTimestamp != null ? parseInt((new Date()).getTime()/1000 - window.ANALYTICS.currentTimestamp) : 0;
 		    }
 
-	};
+	})();
 
-	var siteSearchTracking = function() {
-		var _paq = _paq || [];
+	var siteSearchTracking = (function() {
+
 		var searchItem;
 
 		var input = document.getElementsByClassName('searchbox__input')[0]; 
@@ -225,4 +226,7 @@
 
 	 	}, 1000);
 
-	};
+	})();
+
+
+})(_paq = _paq || []);
